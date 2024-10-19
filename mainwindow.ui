@@ -6,86 +6,51 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
-    <height>304</height>
+    <width>704</width>
+    <height>468</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="Ibl_Title_File_Name">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>171</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Audio File Name:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Lbl_Value_File_Name">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>20</y>
-      <width>531</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>FILE_NAME</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_Play">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>120</y>
-      <width>121</width>
-      <height>81</height>
+      <x>440</x>
+      <y>330</y>
+      <width>71</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Play</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_Pause">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>120</y>
-      <width>121</width>
-      <height>81</height>
+      <x>440</x>
+      <y>380</y>
+      <width>71</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Pause</string>
     </property>
    </widget>
    <widget class="QSlider" name="horizontalSlider_Volume_Control">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>120</y>
-      <width>431</width>
-      <height>71</height>
+      <x>30</x>
+      <y>360</y>
+      <width>171</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="minimum">
      <number>1</number>
@@ -100,14 +65,149 @@
      <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QFrame" name="frame_Pantalla_Video">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>20</y>
+      <width>451</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QLabel" name="Ibl_Title_File_Name">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>200</y>
+       <width>261</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Audio File Name:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="Lbl_Value_File_Name">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>441</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>FILE_NAME</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_Biblioteca">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>141</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Next">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>350</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Next</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Repet">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>350</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Repet</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Mute">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>310</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mute</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Back">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>350</y>
+      <width>71</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>300</y>
+      <width>481</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>774</width>
-     <height>25</height>
+     <width>704</width>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">

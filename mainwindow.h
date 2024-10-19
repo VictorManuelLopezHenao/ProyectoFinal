@@ -27,6 +27,16 @@ private slots:
     void on_pushButton_Pause_clicked();
     void on_horizontalSlider_Volume_Control_valueChanged(int value);
 
+    void on_pushButton_Next_clicked();
+
+    void on_pushButton_Back_clicked();
+
+    void on_pushButton_Repet_clicked();
+
+    void on_pushButton_Mute_clicked();
+
+    void on_progressBar_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
     QMediaPlayer *M_Player;
