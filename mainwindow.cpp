@@ -78,7 +78,4 @@ void MainWindow::on_pushButton_Mute_clicked()   //Boton Mute
 }
 
 
-void MainWindow::on_progressBar_valueChanged(int value)
-{
-}
 

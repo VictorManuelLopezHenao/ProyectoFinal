@@ -35,8 +35,6 @@ private slots:
 
     void on_pushButton_Mute_clicked();
 
-    void on_progressBar_valueChanged(int value);
-
 private:
     Ui::MainWindow *ui;
     QMediaPlayer *M_Player;
