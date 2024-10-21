@@ -16,10 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     audioOutput = new QAudioOutput(this);
     M_Player->setAudioOutput(audioOutput);
 
-    // Ajustamos el volumen inicial basado en el valor del slider
-    vol = ui->horizontalSlider_Volume_Control->value() / 100.0; 
-    audioOutput->setVolume(vol);
-
     // Inicializamos el reproductor y la salida de audio para el video
     Player = new QMediaPlayer(this);
     videoAudioOutput = new QAudioOutput(this);
@@ -59,21 +55,6 @@ void MainWindow::on_actionOpen_File_triggered()
     ui->Lbl_Value_File_Name->setText(File.fileName());
 }
 
-void MainWindow::on_pushButton_Play_clicked()
-{
-    M_Player->play();
-}
-
-void MainWindow::on_pushButton_Pause_clicked()
-{
-    M_Player->stop();
-}
-
-void MainWindow::on_horizontalSlider_Volume_Control_valueChanged(int value)
-{
-    vol = value / 100.0;
-    audioOutput->setVolume(vol);
-}
 
 void MainWindow::on_actionOpen_File_Video_triggered()
 {
@@ -139,3 +120,6 @@ void MainWindow::on_pushButton_Seek_ForwardV_clicked()
     ui->horizontalSlide_DurationV->setValue(ui->horizontalSlide_DurationV->value() + 20);
     Player->setPosition(ui->horizontalSlide_DurationV->value() * 1000);
 }
+
+
+

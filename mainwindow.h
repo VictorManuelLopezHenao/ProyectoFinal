@@ -42,6 +42,10 @@ private slots:
     void on_pushButton_Seek_BackwardV_clicked();
     void on_pushButton_Seek_ForwardV_clicked();
 
+    void on_horizontalSlider_Volume_Control_actionTriggered(int action);
+
+    void on_Lbl_Value_File_Name_linkActivated(const QString &link);
+
 private:
     Ui::MainWindow *ui;
 
