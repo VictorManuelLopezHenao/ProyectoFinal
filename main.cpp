@@ -3,7 +3,7 @@
 #include <QApplication>
 
 //VIMA PEDAZO DE CACORRO
-
+//llamen a dios
 
 
 int main(int argc, char *argv[])
