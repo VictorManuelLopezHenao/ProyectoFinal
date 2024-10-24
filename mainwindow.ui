@@ -200,13 +200,13 @@ border: 1px solid black;
      <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QTreeView" name="exploradorcarpetas">
+   <widget class="QTreeView" name="treeView">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>30</y>
       <width>221</width>
-      <height>91</height>
+      <height>281</height>
      </rect>
     </property>
    </widget>
@@ -214,9 +214,9 @@ border: 1px solid black;
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>131</y>
+      <y>321</y>
       <width>221</width>
-      <height>281</height>
+      <height>91</height>
      </rect>
     </property>
    </widget>
@@ -227,7 +227,7 @@ border: 1px solid black;
      <x>0</x>
      <y>0</y>
      <width>920</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">

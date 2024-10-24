@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,10 +14,23 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QString dir = "/";
+    directorio = new QFileSystemModel(this);
+    directorio->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
+    directorio->setRootPath(dir);
+
+    ui->treeView->setModel(directorio);
+
+    archivo = new QFileSystemModel(this);
+    archivo->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
+    archivo->setRootPath(dir);
+
+    ui->listView->setModel(archivo);
+
     // Configuración del reproductor de video
     Player = new QMediaPlayer(this);
-    videoAudioOutput = new QAudioOutput(this);  // Crear salida de audio para el video
-    Player->setAudioOutput(videoAudioOutput);   // Asignar la salida de audio al reproductor de video
+    videoAudioOutput = new QAudioOutput(this);
+    Player->setAudioOutput(videoAudioOutput);
 
     // Ajustes visuales del reproductor de video
     ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -37,19 +51,19 @@ MainWindow::MainWindow(QWidget *parent)
     IS_Pause = true;
     IS_Muted = false;
 
-    //Barra y tiempo de duracion de los archivos
+    // Barra y tiempo de duración de los archivos
     connect(Player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
     connect(Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
+
     // En el constructor
     ui->horizontalSlide_DurationV->setRange(0, 0);
-    Mduration = 0; //Que inicie en 0
+    Mduration = 0; // Que inicie en 0
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 // Función para actualizar la duración mostrada
 void MainWindow::updateDuration(qint64 duration)
@@ -93,8 +107,8 @@ void MainWindow::on_actionOpen_File_Video_triggered()
         Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
         Video->setParent(ui->groupBox_Video);
 
-        Player->setVideoOutput(Video);  // Asignar el reproductor al widget de video
-        Player->setSource(QUrl::fromLocalFile(FileName));  // Asignar el archivo de video
+        Player->setVideoOutput(Video);
+        Player->setSource(QUrl::fromLocalFile(FileName));
 
         Video->setVisible(true);
         Video->show();
@@ -112,15 +126,17 @@ void MainWindow::on_pushButton_Play_PauseV_clicked()
 {
     if (IS_Pause)
     {
+        // Si está en pausa, iniciar la reproducción
         IS_Pause = false;
         Player->play();
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));  // Mostrar ícono de pausa
     }
     else
     {
+        // Si está reproduciéndose, pausar
         IS_Pause = true;
         Player->pause();
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));  // Mostrar ícono de play
     }
 }
 
@@ -135,13 +151,13 @@ void MainWindow::on_pushButton_VolumeV_clicked()
 {
     IS_Muted = !IS_Muted;
     ui->pushButton_VolumeV->setIcon(IS_Muted ? style()->standardIcon(QStyle::SP_MediaVolumeMuted) : style()->standardIcon(QStyle::SP_MediaVolume));
-    videoAudioOutput->setMuted(IS_Muted);  // Mutear o desmutear la salida de audio del video
+    videoAudioOutput->setMuted(IS_Muted);
 }
 
 // Control del volumen del video
 void MainWindow::on_horizontalSlider_VolumeV_valueChanged(int value)
 {
-    videoAudioOutput->setVolume(value / 100.0);  // Ajustar el volumen del reproductor de video
+    videoAudioOutput->setVolume(value / 100.0);
 }
 
 // Botón para retroceder en el video
@@ -158,4 +174,53 @@ void MainWindow::on_pushButton_Seek_ForwardV_clicked()
     int newValue = ui->horizontalSlide_DurationV->value() + 20;
     ui->horizontalSlide_DurationV->setValue(newValue);
     Player->setPosition(ui->horizontalSlide_DurationV->value() * 1000);
+}
+
+// Manejo del clic en treeView para actualizar listView o reproducir archivos multimedia
+void MainWindow::on_treeView_clicked(const QModelIndex &index)
+{
+    // Verificar que el índice sea válido
+    if (!index.isValid()) {
+        QMessageBox::warning(this, tr("Error"), tr("No se ha seleccionado ningún archivo o directorio."));
+        return;
+    }
+
+    QString filePath = directorio->fileInfo(index).absoluteFilePath();
+
+    // Comprobar si es un directorio
+    if (directorio->fileInfo(index).isDir()) {
+        ui->listView->setRootIndex(archivo->setRootPath(filePath));
+    } else {
+        // Si es un archivo, reproducirlo
+        qDebug() << "Archivo seleccionado:" << filePath;
+
+        // Limpiar el widget de video si ya existe
+        if (Video) {
+            delete Video; // Eliminar el widget de video
+            Video = nullptr; // Establecer el puntero a nullptr
+        }
+
+        // Crear un nuevo QVideoWidget para mostrar el video
+        Video = new QVideoWidget(ui->groupBox_Video);
+        Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
+        Video->setVisible(true);
+        Video->setParent(ui->groupBox_Video); // Establecer el padre
+
+        // Asignar el video al reproductor
+        Player->setVideoOutput(Video);
+
+        // Comprobar si el archivo existe y es un archivo de video válido
+        if (QFileInfo::exists(filePath) && QFileInfo(filePath).isFile()) {
+            Player->setSource(QUrl::fromLocalFile(filePath)); // Cargar el archivo seleccionado
+            Player->play(); // Reproducir automáticamente
+
+            // Actualizar el estado y el ícono del botón play/pause
+            IS_Pause = false;
+            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("El archivo seleccionado no existe o no es un archivo válido."));
+        }
+
+        Video->show(); // Mostrar el widget de video
+    }
 }

@@ -26,7 +26,7 @@ public:
     ~MainWindow();
 
 private slots:
-    //Barra y tiempo de duracion del archivo multimedia
+    // Barra y tiempo de duración del archivo multimedia
     void durationChanged(qint64 duration);
     void positionChanged(qint64 position);
 
@@ -41,23 +41,24 @@ private slots:
     void on_horizontalSlider_VolumeV_valueChanged(int value);
     void on_pushButton_Seek_BackwardV_clicked();
     void on_pushButton_Seek_ForwardV_clicked();
+    void on_treeView_clicked(const QModelIndex &index);
 
 private:
-    void updateDuration(qint64 duration);  //Funcion para la duracion del archivo multimedia
+    void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
     Ui::MainWindow *ui;
 
     // Reproductor de video
     QMediaPlayer *Player;           // Reproductor de video
     QVideoWidget *Video;            // Widget de video
     QAudioOutput *videoAudioOutput; // Salida de audio para el reproductor de video
-    qint64 mDuration;               // Duración del video
+    qint64 Mduration;               // Duración del video
 
     // Estado del reproductor de video
     bool IS_Pause;                  // Indica si el video está pausado
     bool IS_Muted;                  // Indica si el video está silenciado
 
-    //Duracion del archivo multimedia
-    quint64 Mduration;
+    QFileSystemModel *directorio;
+    QFileSystemModel *archivo;
 };
 
 #endif // MAINWINDOW_H
