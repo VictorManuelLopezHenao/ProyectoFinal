@@ -76,7 +76,7 @@ border: 1px solid black;
      <rect>
       <x>290</x>
       <y>380</y>
-      <width>581</width>
+      <width>571</width>
       <height>20</height>
      </rect>
     </property>
@@ -106,7 +106,7 @@ border: 1px solid black;
    <widget class="QLabel" name="label_Total_Time">
     <property name="geometry">
      <rect>
-      <x>810</x>
+      <x>800</x>
       <y>400</y>
       <width>71</width>
       <height>20</height>
@@ -125,7 +125,7 @@ border: 1px solid black;
    <widget class="QPushButton" name="pushButton_Play_PauseV">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>550</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
@@ -138,7 +138,7 @@ border: 1px solid black;
    <widget class="QPushButton" name="pushButton_Seek_BackwardV">
     <property name="geometry">
      <rect>
-      <x>500</x>
+      <x>430</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
@@ -151,7 +151,7 @@ border: 1px solid black;
    <widget class="QPushButton" name="pushButton_StopV">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>790</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
@@ -164,7 +164,7 @@ border: 1px solid black;
    <widget class="QPushButton" name="pushButton_Seek_ForwardV">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>670</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
@@ -177,7 +177,7 @@ border: 1px solid black;
    <widget class="QPushButton" name="pushButton_VolumeV">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>310</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
@@ -190,8 +190,8 @@ border: 1px solid black;
    <widget class="QSlider" name="horizontalSlider_VolumeV">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>380</y>
+      <x>50</x>
+      <y>440</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -204,13 +204,33 @@ border: 1px solid black;
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>160</y>
+      <y>0</y>
       <width>37</width>
       <height>12</height>
      </rect>
     </property>
     <property name="text">
      <string>Lista</string>
+    </property>
+   </widget>
+   <widget class="QTreeView" name="exploradorcarpetas">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>221</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>131</y>
+      <width>221</width>
+      <height>281</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -220,7 +240,7 @@ border: 1px solid black;
      <x>0</x>
      <y>0</y>
      <width>892</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">
