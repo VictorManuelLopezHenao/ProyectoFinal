@@ -45,7 +45,6 @@ public:
     QPushButton *pushButton_Seek_ForwardV;
     QPushButton *pushButton_VolumeV;
     QSlider *horizontalSlider_VolumeV;
-    QLabel *label;
     QTreeView *exploradorcarpetas;
     QListView *listView;
     QMenuBar *menubar;
@@ -57,7 +56,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(892, 524);
+        MainWindow->resize(920, 547);
         actionOpen_File = new QAction(MainWindow);
         actionOpen_File->setObjectName("actionOpen_File");
         actionOpen_File_Video = new QAction(MainWindow);
@@ -73,7 +72,7 @@ public:
 "}"));
         label_Title_File_Name = new QLabel(groupBox_Video);
         label_Title_File_Name->setObjectName("label_Title_File_Name");
-        label_Title_File_Name->setGeometry(QRect(10, 270, 171, 31));
+        label_Title_File_Name->setGeometry(QRect(10, 270, 201, 31));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -116,9 +115,6 @@ public:
         horizontalSlider_VolumeV->setObjectName("horizontalSlider_VolumeV");
         horizontalSlider_VolumeV->setGeometry(QRect(50, 440, 181, 20));
         horizontalSlider_VolumeV->setOrientation(Qt::Orientation::Horizontal);
-        label = new QLabel(centralwidget);
-        label->setObjectName("label");
-        label->setGeometry(QRect(80, 0, 37, 12));
         exploradorcarpetas = new QTreeView(centralwidget);
         exploradorcarpetas->setObjectName("exploradorcarpetas");
         exploradorcarpetas->setGeometry(QRect(30, 30, 221, 91));
@@ -128,7 +124,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 892, 22));
+        menubar->setGeometry(QRect(0, 0, 920, 28));
         menuOpen = new QMenu(menubar);
         menuOpen->setObjectName("menuOpen");
         menuVideo = new QMenu(menubar);
@@ -163,7 +159,6 @@ public:
         pushButton_StopV->setText(QString());
         pushButton_Seek_ForwardV->setText(QString());
         pushButton_VolumeV->setText(QString());
-        label->setText(QCoreApplication::translate("MainWindow", "Lista", nullptr));
         menuOpen->setTitle(QCoreApplication::translate("MainWindow", "Audio", nullptr));
         menuVideo->setTitle(QCoreApplication::translate("MainWindow", "Video", nullptr));
     } // retranslateUi

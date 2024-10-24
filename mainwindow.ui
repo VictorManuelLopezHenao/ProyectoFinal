@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>892</width>
-    <height>524</height>
+    <width>920</width>
+    <height>547</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@ border: 1px solid black;
       <rect>
        <x>10</x>
        <y>270</y>
-       <width>171</width>
+       <width>201</width>
        <height>31</height>
       </rect>
      </property>
@@ -200,19 +200,6 @@ border: 1px solid black;
      <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>0</y>
-      <width>37</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Lista</string>
-    </property>
-   </widget>
    <widget class="QTreeView" name="exploradorcarpetas">
     <property name="geometry">
      <rect>
@@ -239,8 +226,8 @@ border: 1px solid black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>892</width>
-     <height>22</height>
+     <width>920</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen">

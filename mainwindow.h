@@ -26,6 +26,10 @@ public:
     ~MainWindow();
 
 private slots:
+    //Barra y tiempo de duracion del archivo multimedia
+    void durationChanged(qint64 duration);
+    void positionChanged(qint64 position);
+
     // Acciones relacionadas con archivos de video
     void on_actionOpen_File_Video_triggered();
     void on_horizontalSlide_DurationV_valueChanged(int value);
@@ -39,6 +43,7 @@ private slots:
     void on_pushButton_Seek_ForwardV_clicked();
 
 private:
+    void updateDuration(qint64 duration);  //Funcion para la duracion del archivo multimedia
     Ui::MainWindow *ui;
 
     // Reproductor de video
@@ -50,6 +55,9 @@ private:
     // Estado del reproductor de video
     bool IS_Pause;                  // Indica si el video está pausado
     bool IS_Muted;                  // Indica si el video está silenciado
+
+    //Duracion del archivo multimedia
+    quint64 Mduration;
 };
 
 #endif // MAINWINDOW_H

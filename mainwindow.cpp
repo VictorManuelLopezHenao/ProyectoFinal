@@ -36,11 +36,52 @@ MainWindow::MainWindow(QWidget *parent)
     // Inicializamos las banderas de estado
     IS_Pause = true;
     IS_Muted = false;
+
+    //Barra y tiempo de duracion de los archivos
+    connect(Player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
+    connect(Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
+    // En el constructor
+    ui->horizontalSlide_DurationV->setRange(0, 0);
+    Mduration = 0; //Que inicie en 0
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+// Función para actualizar la duración mostrada
+void MainWindow::updateDuration(qint64 duration)
+{
+    if (duration > 0 && Mduration > 0) {
+        QTime CurrentTime((duration / 3600) % 60, (duration / 60) % 60, duration % 60);
+        QTime TotalTime((Mduration / 3600) % 60, (Mduration / 60) % 60, Mduration % 60);
+
+        QString format = "mm:ss";
+        if (Mduration > 3600) {
+            format = "hh:mm:ss";
+        }
+
+        ui->label_Current_Time->setText(CurrentTime.toString(format));
+        ui->label_Total_Time->setText(TotalTime.toString(format));
+    }
+}
+
+// Función para manejar el cambio de duración
+void MainWindow::durationChanged(qint64 duration)
+{
+    Mduration = duration / 1000; // Convertir a segundos
+    ui->horizontalSlide_DurationV->setMaximum(Mduration); // Establecer el rango máximo
+}
+
+// Función para manejar el cambio de posición
+void MainWindow::positionChanged(qint64 position)
+{
+    if (!ui->horizontalSlide_DurationV->isSliderDown()) {
+        updateDuration(position / 1000); // Actualiza el tiempo mostrado
+        ui->horizontalSlide_DurationV->setValue(position / 1000); // Actualiza la barra de progreso
+    }
 }
 
 // Acción para abrir archivo de video
