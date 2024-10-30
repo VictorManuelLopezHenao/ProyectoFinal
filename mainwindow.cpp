@@ -7,6 +7,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QMessageBox>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,8 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->horizontalSlider_VolumeV->setMinimum(0);
     ui->horizontalSlider_VolumeV->setMaximum(100);
     ui->horizontalSlider_VolumeV->setValue(30); // Volumen inicial
-
-    // Inicializamos el volumen en el reproductor de video
     videoAudioOutput->setVolume(ui->horizontalSlider_VolumeV->value() / 100.0);
 
     // Inicializamos las banderas de estado
@@ -57,12 +56,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     // En el constructor
     ui->horizontalSlide_DurationV->setRange(0, 0);
-    Mduration = 0; // Que inicie en 0
+    Mduration = 0;
+
+    // Configuración del QTimer para actualizar el slider
+    updateTimer = new QTimer(this);
+    updateTimer->setInterval(500);  // Actualiza cada medio segundo
+    connect(updateTimer, &QTimer::timeout, this, &MainWindow::updateSliderPosition);
+    updateTimer->start();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// Función para actualizar la posición del slider
+void MainWindow::updateSliderPosition()
+{
+    if (!ui->horizontalSlide_DurationV->isSliderDown()) {
+        ui->horizontalSlide_DurationV->blockSignals(true);
+        ui->horizontalSlide_DurationV->setValue(Player->position() / 1000);
+        ui->horizontalSlide_DurationV->blockSignals(false);
+    }
+    updateDuration(Player->position() / 1000);
 }
 
 // Función para actualizar la duración mostrada
@@ -85,16 +101,15 @@ void MainWindow::updateDuration(qint64 duration)
 // Función para manejar el cambio de duración
 void MainWindow::durationChanged(qint64 duration)
 {
-    Mduration = duration / 1000; // Convertir a segundos
-    ui->horizontalSlide_DurationV->setMaximum(Mduration); // Establecer el rango máximo
+    Mduration = duration / 1000;
+    ui->horizontalSlide_DurationV->setMaximum(Mduration);
 }
 
 // Función para manejar el cambio de posición
-void MainWindow::positionChanged(qint64 position)
+void MainWindow::positionChanged(qint64)
 {
     if (!ui->horizontalSlide_DurationV->isSliderDown()) {
-        updateDuration(position / 1000); // Actualiza el tiempo mostrado
-        ui->horizontalSlide_DurationV->setValue(position / 1000); // Actualiza la barra de progreso
+        updateSliderPosition();  // Mover la lógica al QTimer
     }
 }
 
@@ -118,7 +133,7 @@ void MainWindow::on_actionOpen_File_Video_triggered()
 // Control del progreso del video
 void MainWindow::on_horizontalSlide_DurationV_valueChanged(int value)
 {
-    Player->setPosition(value * 1000);  // Establecer la posición en milisegundos
+    Player->setPosition(value * 1000);
 }
 
 // Botón para reproducir o pausar el video
@@ -126,17 +141,15 @@ void MainWindow::on_pushButton_Play_PauseV_clicked()
 {
     if (IS_Pause)
     {
-        // Si está en pausa, iniciar la reproducción
         IS_Pause = false;
         Player->play();
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));  // Mostrar ícono de pausa
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
     else
     {
-        // Si está reproduciéndose, pausar
         IS_Pause = true;
         Player->pause();
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));  // Mostrar ícono de play
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
 }
 
@@ -179,7 +192,6 @@ void MainWindow::on_pushButton_Seek_ForwardV_clicked()
 // Manejo del clic en treeView para actualizar listView o reproducir archivos multimedia
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
-    // Verificar que el índice sea válido
     if (!index.isValid()) {
         QMessageBox::warning(this, tr("Error"), tr("No se ha seleccionado ningún archivo o directorio."));
         return;
@@ -187,40 +199,33 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index)
 
     QString filePath = directorio->fileInfo(index).absoluteFilePath();
 
-    // Comprobar si es un directorio
     if (directorio->fileInfo(index).isDir()) {
         ui->listView->setRootIndex(archivo->setRootPath(filePath));
     } else {
-        // Si es un archivo, reproducirlo
         qDebug() << "Archivo seleccionado:" << filePath;
 
-        // Limpiar el widget de video si ya existe
         if (Video) {
-            delete Video; // Eliminar el widget de video
-            Video = nullptr; // Establecer el puntero a nullptr
+            delete Video;
+            Video = nullptr;
         }
 
-        // Crear un nuevo QVideoWidget para mostrar el video
         Video = new QVideoWidget(ui->groupBox_Video);
         Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
         Video->setVisible(true);
-        Video->setParent(ui->groupBox_Video); // Establecer el padre
+        Video->setParent(ui->groupBox_Video);
 
-        // Asignar el video al reproductor
         Player->setVideoOutput(Video);
 
-        // Comprobar si el archivo existe y es un archivo de video válido
         if (QFileInfo::exists(filePath) && QFileInfo(filePath).isFile()) {
-            Player->setSource(QUrl::fromLocalFile(filePath)); // Cargar el archivo seleccionado
-            Player->play(); // Reproducir automáticamente
+            Player->setSource(QUrl::fromLocalFile(filePath));
+            Player->play();
 
-            // Actualizar el estado y el ícono del botón play/pause
             IS_Pause = false;
             ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         } else {
             QMessageBox::warning(this, tr("Error"), tr("El archivo seleccionado no existe o no es un archivo válido."));
         }
 
-        Video->show(); // Mostrar el widget de video
+        Video->show();
     }
 }
