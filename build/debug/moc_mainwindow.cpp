@@ -40,20 +40,24 @@ namespace {
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::stringData(
     "MainWindow",
-    "on_actionOpen_File_triggered",
+    "updateSliderPosition",
     "",
-    "on_pushButton_Play_clicked",
-    "on_pushButton_Pause_clicked",
-    "on_horizontalSlider_Volume_Control_valueChanged",
-    "value",
+    "durationChanged",
+    "duration",
+    "positionChanged",
+    "position",
     "on_actionOpen_File_Video_triggered",
     "on_horizontalSlide_DurationV_valueChanged",
+    "value",
     "on_pushButton_Play_PauseV_clicked",
     "on_pushButton_StopV_clicked",
     "on_pushButton_VolumeV_clicked",
     "on_horizontalSlider_VolumeV_valueChanged",
     "on_pushButton_Seek_BackwardV_clicked",
-    "on_pushButton_Seek_ForwardV_clicked"
+    "on_pushButton_Seek_ForwardV_clicked",
+    "on_treeView_clicked",
+    "QModelIndex",
+    "index"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -75,31 +79,31 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
        1,    0,   86,    2, 0x08,    1 /* Private */,
-       3,    0,   87,    2, 0x08,    2 /* Private */,
-       4,    0,   88,    2, 0x08,    3 /* Private */,
-       5,    1,   89,    2, 0x08,    4 /* Private */,
-       7,    0,   92,    2, 0x08,    6 /* Private */,
-       8,    1,   93,    2, 0x08,    7 /* Private */,
-       9,    0,   96,    2, 0x08,    9 /* Private */,
-      10,    0,   97,    2, 0x08,   10 /* Private */,
-      11,    0,   98,    2, 0x08,   11 /* Private */,
-      12,    1,   99,    2, 0x08,   12 /* Private */,
-      13,    0,  102,    2, 0x08,   14 /* Private */,
-      14,    0,  103,    2, 0x08,   15 /* Private */,
+       3,    1,   87,    2, 0x08,    2 /* Private */,
+       5,    1,   90,    2, 0x08,    4 /* Private */,
+       7,    0,   93,    2, 0x08,    6 /* Private */,
+       8,    1,   94,    2, 0x08,    7 /* Private */,
+      10,    0,   97,    2, 0x08,    9 /* Private */,
+      11,    0,   98,    2, 0x08,   10 /* Private */,
+      12,    0,   99,    2, 0x08,   11 /* Private */,
+      13,    1,  100,    2, 0x08,   12 /* Private */,
+      14,    0,  103,    2, 0x08,   14 /* Private */,
+      15,    0,  104,    2, 0x08,   15 /* Private */,
+      16,    1,  105,    2, 0x08,   16 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
+    QMetaType::Void, QMetaType::LongLong,    4,
+    QMetaType::Void, QMetaType::LongLong,    6,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    9,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    6,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    6,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    9,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    6,
-    QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 17,   18,
 
        0        // eod
 };
@@ -113,15 +117,14 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSMainWindowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<MainWindow, std::true_type>,
-        // method 'on_actionOpen_File_triggered'
+        // method 'updateSliderPosition'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_pushButton_Play_clicked'
+        // method 'durationChanged'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_pushButton_Pause_clicked'
+        QtPrivate::TypeAndForceComplete<qint64, std::false_type>,
+        // method 'positionChanged'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_horizontalSlider_Volume_Control_valueChanged'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<qint64, std::false_type>,
         // method 'on_actionOpen_File_Video_triggered'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_horizontalSlide_DurationV_valueChanged'
@@ -139,7 +142,10 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'on_pushButton_Seek_BackwardV_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_pushButton_Seek_ForwardV_clicked'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_treeView_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QModelIndex &, std::false_type>
     >,
     nullptr
 } };
@@ -150,18 +156,18 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         auto *_t = static_cast<MainWindow *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->on_actionOpen_File_triggered(); break;
-        case 1: _t->on_pushButton_Play_clicked(); break;
-        case 2: _t->on_pushButton_Pause_clicked(); break;
-        case 3: _t->on_horizontalSlider_Volume_Control_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 4: _t->on_actionOpen_File_Video_triggered(); break;
-        case 5: _t->on_horizontalSlide_DurationV_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 6: _t->on_pushButton_Play_PauseV_clicked(); break;
-        case 7: _t->on_pushButton_StopV_clicked(); break;
-        case 8: _t->on_pushButton_VolumeV_clicked(); break;
-        case 9: _t->on_horizontalSlider_VolumeV_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 10: _t->on_pushButton_Seek_BackwardV_clicked(); break;
-        case 11: _t->on_pushButton_Seek_ForwardV_clicked(); break;
+        case 0: _t->updateSliderPosition(); break;
+        case 1: _t->durationChanged((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 2: _t->positionChanged((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 3: _t->on_actionOpen_File_Video_triggered(); break;
+        case 4: _t->on_horizontalSlide_DurationV_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 5: _t->on_pushButton_Play_PauseV_clicked(); break;
+        case 6: _t->on_pushButton_StopV_clicked(); break;
+        case 7: _t->on_pushButton_VolumeV_clicked(); break;
+        case 8: _t->on_horizontalSlider_VolumeV_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 9: _t->on_pushButton_Seek_BackwardV_clicked(); break;
+        case 10: _t->on_pushButton_Seek_ForwardV_clicked(); break;
+        case 11: _t->on_treeView_clicked((*reinterpret_cast< std::add_pointer_t<QModelIndex>>(_a[1]))); break;
         default: ;
         }
     }

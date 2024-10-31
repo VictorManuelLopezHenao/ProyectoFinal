@@ -113,20 +113,32 @@ void MainWindow::positionChanged(qint64)
     }
 }
 
-// Acción para abrir archivo de video
+//Mostrar el video en pantalla
 void MainWindow::on_actionOpen_File_Video_triggered()
 {
-    QString FileName = QFileDialog::getOpenFileName(this, tr("Select Video File"), "", tr("MP4 Files (*.mp4)"));
-    if (!FileName.isEmpty()) {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Video File"), "", tr("Video Files (*.mp4 *.avi *.mkv)"));
+    if (!fileName.isEmpty()) {
+        // Configurar el QVideoWidget si aún no está inicializado
         Video = new QVideoWidget();
         Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
         Video->setParent(ui->groupBox_Video);
 
+        // Configurar la salida de video y el archivo de video
         Player->setVideoOutput(Video);
-        Player->setSource(QUrl::fromLocalFile(FileName));
+        Player->setSource(QUrl::fromLocalFile(fileName));
 
+        // Mostrar el video y reproducir
         Video->setVisible(true);
         Video->show();
+        Player->play();
+
+        // Actualizar la etiqueta con el nombre del archivo
+        QFileInfo fileInfo(fileName);
+        ui->label_Value_File_Name->setText(fileInfo.fileName());
+
+        // Cambiar el icono del botón de reproducción a "pausa"
+        IS_Pause = false;
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
 }
 
