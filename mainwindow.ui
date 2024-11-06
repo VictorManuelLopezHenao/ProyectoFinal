@@ -152,9 +152,9 @@ border: 1px solid black;
    <widget class="QSlider" name="horizontalSlider_VolumeV">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>440</y>
-      <width>181</width>
+      <width>221</width>
       <height>20</height>
      </rect>
     </property>

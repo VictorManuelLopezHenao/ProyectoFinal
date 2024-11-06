@@ -102,7 +102,7 @@ public:
         pushButton_VolumeV->setGeometry(QRect(310, 490, 51, 41));
         horizontalSlider_VolumeV = new QSlider(centralwidget);
         horizontalSlider_VolumeV->setObjectName("horizontalSlider_VolumeV");
-        horizontalSlider_VolumeV->setGeometry(QRect(50, 440, 181, 20));
+        horizontalSlider_VolumeV->setGeometry(QRect(30, 440, 221, 20));
         horizontalSlider_VolumeV->setOrientation(Qt::Orientation::Horizontal);
         treeView = new QTreeView(centralwidget);
         treeView->setObjectName("treeView");

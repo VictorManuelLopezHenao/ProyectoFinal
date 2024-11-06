@@ -15,6 +15,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////// NUEVO
+
+    // Configuración del QFileSystemModel para el treeView
+    directorio = new QFileSystemModel(this);
+    directorio->setRootPath(QDir::rootPath());
+    ui->treeView->setModel(directorio);
+    ui->treeView->setRootIndex(directorio->index(QDir::rootPath())); // Muestra el root por defecto
+
+    // Conectar la señal de selección
+    connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::on_treeView_clicked);
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+
     QString dir = "/";
     directorio = new QFileSystemModel(this);
     directorio->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
@@ -201,43 +221,67 @@ void MainWindow::on_pushButton_Seek_ForwardV_clicked()
     Player->setPosition(ui->horizontalSlide_DurationV->value() * 1000);
 }
 
-// Manejo del clic en treeView para actualizar listView o reproducir archivos multimedia
-void MainWindow::on_treeView_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()) {
-        QMessageBox::warning(this, tr("Error"), tr("No se ha seleccionado ningún archivo o directorio."));
-        return;
-    }
 
-    QString filePath = directorio->fileInfo(index).absoluteFilePath();
 
-    if (directorio->fileInfo(index).isDir()) {
-        ui->listView->setRootIndex(archivo->setRootPath(filePath));
-    } else {
-        qDebug() << "Archivo seleccionado:" << filePath;
 
-        if (Video) {
-            delete Video;
-            Video = nullptr;
-        }
 
-        Video = new QVideoWidget(ui->groupBox_Video);
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////// NUEVO
+/////////////////////////////////////////////////////////////////////////////// NUEVO
+
+
+
+void MainWindow::createVideoWidget() {
+    if (!Video) {
+        Video = new QVideoWidget();
         Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
-        Video->setVisible(true);
         Video->setParent(ui->groupBox_Video);
 
+        // Configurar el reproductor de video
         Player->setVideoOutput(Video);
-
-        if (QFileInfo::exists(filePath) && QFileInfo(filePath).isFile()) {
-            Player->setSource(QUrl::fromLocalFile(filePath));
-            Player->play();
-
-            IS_Pause = false;
-            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-        } else {
-            QMessageBox::warning(this, tr("Error"), tr("El archivo seleccionado no existe o no es un archivo válido."));
-        }
-
+        Video->setVisible(true);
         Video->show();
     }
 }
+
+
+
+/////////////////////////////////////////////////////////////////////////////// NUEVO
+
+
+
+void MainWindow::on_treeView_clicked(const QModelIndex &index) {
+    // Verifica si el índice es válido y si corresponde a un archivo
+    if (!index.isValid()) {
+        return; // No hacer nada si el índice no es válido
+    }
+
+    QString filePath = directorio->filePath(index);
+    QFileInfo fileInfo(filePath);
+
+    // Verifica que el archivo sea de un tipo específico
+    if (fileInfo.isFile() && (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp3")) {
+
+        // Llamar a la función que asegura la creación del VideoWidget
+        createVideoWidget();
+
+        // Configura la fuente del reproductor y reproduce el archivo
+        Player->setSource(QUrl::fromLocalFile(filePath));
+        Player->play();
+
+        // Cambiar el icono del botón de reproducción a "pausa"
+        IS_Pause = false;
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+
+        // Actualizar la etiqueta con el nombre del archivo
+        ui->label_Value_File_Name->setText(fileInfo.fileName());
+    } else {
+        // Mostrar un mensaje o manejar el caso en que no es un archivo multimedia
+        QMessageBox::warning(this, tr("Formato no soportado"), tr("Por favor selecciona un archivo de video o audio válido."));
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////

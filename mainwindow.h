@@ -46,7 +46,10 @@ private slots:
     void on_horizontalSlider_VolumeV_valueChanged(int value);
     void on_pushButton_Seek_BackwardV_clicked();
     void on_pushButton_Seek_ForwardV_clicked();
+
+
     void on_treeView_clicked(const QModelIndex &index);
+
 
 private:
     QTimer *updateTimer; // Declaración del QTimer
@@ -65,6 +68,13 @@ private:
 
     QFileSystemModel *directorio;
     QFileSystemModel *archivo;
+
+
+
+
+     void createVideoWidget(); //NUEVO
+
+
 };
 
 #endif // MAINWINDOW_H
