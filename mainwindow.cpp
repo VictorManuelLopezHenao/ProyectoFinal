@@ -8,15 +8,13 @@
 #include <QAudioOutput>
 #include <QMessageBox>
 #include <QTimer>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
-///////////////////////////////////////////////////////////////////////////// NUEVO
 
     // Inicialización del VideoWidget
     Video = new QVideoWidget(this); // Crea una nueva instancia de QVideoWidget
@@ -37,8 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     videoAudioOutput = new QAudioOutput(this);
     Player->setAudioOutput(videoAudioOutput);
     Player->setVideoOutput(Video); // Asegúrate de que el reproductor
-/////////////////////////////////////////////////////////////////////////////
-
 
     // Ajustes visuales del reproductor de video
     ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -161,6 +157,12 @@ void MainWindow::on_pushButton_Play_PauseV_clicked()
 void MainWindow::on_pushButton_StopV_clicked()
 {
     Player->stop();
+
+    // Regresar al inicio del video (en el tiempo 0)
+    Player->setPosition(0);  // Regresa al principio
+
+    // Reproducir el video nuevamente
+    Player->play();
 }
 
 // Botón para mutear el video
@@ -282,4 +284,4 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index) {
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////
+
