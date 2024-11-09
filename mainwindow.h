@@ -13,8 +13,6 @@
 #include <QTimer>
 
 
-
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -52,6 +50,7 @@ private slots:
 
 
 private:
+
     QTimer *updateTimer; // Declaración del QTimer
     void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
     Ui::MainWindow *ui;
