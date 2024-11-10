@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include <QtGui>
 #include <QTimer>
+#include <QListWidgetItem>
 
 
 QT_BEGIN_NAMESPACE
@@ -52,7 +53,6 @@ private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
-
 
     Ui::MainWindow *ui;
 

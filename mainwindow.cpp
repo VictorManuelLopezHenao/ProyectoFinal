@@ -17,9 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Inicialización del VideoWidget
-    Video = new QVideoWidget(this); // Crea una nueva instancia de QVideoWidget
+    Video = new QVideoWidget(this);
     Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
-    Video->setParent(ui->groupBox_Video); // Establece el padre del VideoWidget
+    Video->setParent(ui->groupBox_Video);
+
 
     // Configuración del QFileSystemModel para el treeView
     directorio = new QFileSystemModel(this);
@@ -265,8 +266,6 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index) {
             IS_Pause = false;
             ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
-
-
             // Asegurarse de que el VideoWidget esté visible
             if (Video) {
                 Video->setVisible(true);
@@ -285,12 +284,15 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index) {
             IS_Pause = false;
             ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
-            // No mostrar VideoWidget para archivos de audio
+            // Mostrar el video predefinido
+            Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4")); // Establecer el video de fondo
+            Player->play(); // Reproducir el video
+
+            // Asegurarse de que el VideoWidget esté visible
             if (Video) {
-                Video->hide();
+                Video->setVisible(true);
+                Video->show();
             }
-
-
         } else {
             // Si el archivo no es válido (ni video ni audio), mostrar un mensaje de advertencia
             QMessageBox::warning(this, tr("Formato no soportado"), tr("Por favor selecciona un archivo de video o audio válido."));
@@ -301,8 +303,6 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index) {
     }
 }
 
-
-//funcion para manejar el click en la lista
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
     QString fileName = item->text();
     QString dirPath = directorio->filePath(ui->treeView->currentIndex()); // Obtener la ruta de la carpeta actual
@@ -326,6 +326,16 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
             Player->play();  // Iniciar la reproducción
             // Actualizar el nombre del archivo en la interfaz
             ui->label_Value_File_Name->setText(fileInfo.fileName());
+
+            // Reproducir el video predefinido
+            Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4")); // Establecer el video de fondo
+            Player->play(); // Reproducir el video
+
+            // Asegurarse de que el VideoWidget esté visible
+            if (Video) {
+                Video->setVisible(true);
+                Video->show();
+            }
         } else {
             QMessageBox::warning(this, tr("Formato no soportado"), tr("Este archivo no es soportado por el reproductor."));
         }
