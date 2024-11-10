@@ -18,8 +18,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Inicialización del VideoWidget
     Video = new QVideoWidget(this);
-    Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
     Video->setParent(ui->groupBox_Video);
+
+    //NUEVO
+    QVBoxLayout *videoLayout = new QVBoxLayout(ui->groupBox_Video);
+    videoLayout->addWidget(Video);
+    videoLayout->setContentsMargins(0, 0, 0, 0);  // Sin márgenes para un ajuste completo
+    ui->groupBox_Video->setLayout(videoLayout);
+    //
+
 
     audioPlayer = new QMediaPlayer(this);
     videoAudioOutput = new QAudioOutput(this);  // Asegúrate de que el QAudioOutput esté configurado

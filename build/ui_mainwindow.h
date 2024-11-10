@@ -12,17 +12,22 @@
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QListView>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTreeView>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -33,20 +38,34 @@ public:
     QAction *actionOpen_File;
     QAction *actionOpen_File_Video;
     QWidget *centralwidget;
-    QGroupBox *groupBox_Video;
-    QSlider *horizontalSlide_DurationV;
-    QLabel *label_Current_Time;
-    QLabel *label_Total_Time;
-    QPushButton *pushButton_Play_PauseV;
-    QPushButton *pushButton_Seek_BackwardV;
-    QPushButton *pushButton_StopV;
-    QPushButton *pushButton_Seek_ForwardV;
-    QPushButton *pushButton_VolumeV;
-    QSlider *horizontalSlider_VolumeV;
+    QGridLayout *gridLayout_2;
+    QFormLayout *formLayout;
+    QVBoxLayout *verticalLayout_5;
+    QVBoxLayout *verticalLayout_4;
     QTreeView *treeView;
-    QListView *listView;
+    QListWidget *listWidget;
+    QSlider *horizontalSlider_VolumeV;
+    QGridLayout *gridLayout;
+    QVBoxLayout *verticalLayout_6;
+    QSplitter *splitter;
+    QGroupBox *groupBox_Video;
+    QLabel *ORG1_2;
+    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *verticalLayout_2;
     QLabel *label_Title_File_Name;
     QLabel *label_Value_File_Name;
+    QVBoxLayout *verticalLayout;
+    QSlider *horizontalSlide_DurationV;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_Current_Time;
+    QLabel *ORG1;
+    QLabel *label_Total_Time;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *pushButton_VolumeV;
+    QPushButton *pushButton_Seek_BackwardV;
+    QPushButton *pushButton_Seek_ForwardV;
+    QPushButton *pushButton_Play_PauseV;
+    QPushButton *pushButton_StopV;
     QMenuBar *menubar;
     QMenu *menuOpen;
     QMenu *menuVideo;
@@ -56,75 +75,169 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(920, 630);
+        MainWindow->resize(1161, 803);
         actionOpen_File = new QAction(MainWindow);
         actionOpen_File->setObjectName("actionOpen_File");
         actionOpen_File_Video = new QAction(MainWindow);
         actionOpen_File_Video->setObjectName("actionOpen_File_Video");
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        groupBox_Video = new QGroupBox(centralwidget);
+        gridLayout_2 = new QGridLayout(centralwidget);
+        gridLayout_2->setObjectName("gridLayout_2");
+        formLayout = new QFormLayout();
+        formLayout->setObjectName("formLayout");
+        verticalLayout_5 = new QVBoxLayout();
+        verticalLayout_5->setObjectName("verticalLayout_5");
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setObjectName("verticalLayout_4");
+        treeView = new QTreeView(centralwidget);
+        treeView->setObjectName("treeView");
+
+        verticalLayout_4->addWidget(treeView);
+
+        listWidget = new QListWidget(centralwidget);
+        listWidget->setObjectName("listWidget");
+
+        verticalLayout_4->addWidget(listWidget);
+
+
+        verticalLayout_5->addLayout(verticalLayout_4);
+
+        horizontalSlider_VolumeV = new QSlider(centralwidget);
+        horizontalSlider_VolumeV->setObjectName("horizontalSlider_VolumeV");
+        horizontalSlider_VolumeV->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout_5->addWidget(horizontalSlider_VolumeV);
+
+
+        formLayout->setLayout(0, QFormLayout::LabelRole, verticalLayout_5);
+
+        gridLayout = new QGridLayout();
+        gridLayout->setObjectName("gridLayout");
+        verticalLayout_6 = new QVBoxLayout();
+        verticalLayout_6->setObjectName("verticalLayout_6");
+        splitter = new QSplitter(centralwidget);
+        splitter->setObjectName("splitter");
+        splitter->setOrientation(Qt::Orientation::Vertical);
+        groupBox_Video = new QGroupBox(splitter);
         groupBox_Video->setObjectName("groupBox_Video");
-        groupBox_Video->setGeometry(QRect(290, 30, 571, 331));
         groupBox_Video->setStyleSheet(QString::fromUtf8("QGroupBox\n"
 "{\n"
 "border: 1px solid black;\n"
 "}"));
-        horizontalSlide_DurationV = new QSlider(centralwidget);
-        horizontalSlide_DurationV->setObjectName("horizontalSlide_DurationV");
-        horizontalSlide_DurationV->setGeometry(QRect(290, 440, 571, 20));
-        horizontalSlide_DurationV->setOrientation(Qt::Orientation::Horizontal);
-        label_Current_Time = new QLabel(centralwidget);
-        label_Current_Time->setObjectName("label_Current_Time");
-        label_Current_Time->setGeometry(QRect(290, 460, 71, 20));
-        QFont font;
-        font.setPointSize(11);
-        font.setBold(true);
-        label_Current_Time->setFont(font);
-        label_Total_Time = new QLabel(centralwidget);
-        label_Total_Time->setObjectName("label_Total_Time");
-        label_Total_Time->setGeometry(QRect(800, 460, 71, 20));
-        label_Total_Time->setFont(font);
-        pushButton_Play_PauseV = new QPushButton(centralwidget);
-        pushButton_Play_PauseV->setObjectName("pushButton_Play_PauseV");
-        pushButton_Play_PauseV->setGeometry(QRect(550, 490, 51, 41));
-        pushButton_Seek_BackwardV = new QPushButton(centralwidget);
-        pushButton_Seek_BackwardV->setObjectName("pushButton_Seek_BackwardV");
-        pushButton_Seek_BackwardV->setGeometry(QRect(430, 490, 51, 41));
-        pushButton_StopV = new QPushButton(centralwidget);
-        pushButton_StopV->setObjectName("pushButton_StopV");
-        pushButton_StopV->setGeometry(QRect(790, 490, 51, 41));
-        pushButton_Seek_ForwardV = new QPushButton(centralwidget);
-        pushButton_Seek_ForwardV->setObjectName("pushButton_Seek_ForwardV");
-        pushButton_Seek_ForwardV->setGeometry(QRect(670, 490, 51, 41));
-        pushButton_VolumeV = new QPushButton(centralwidget);
-        pushButton_VolumeV->setObjectName("pushButton_VolumeV");
-        pushButton_VolumeV->setGeometry(QRect(310, 490, 51, 41));
-        horizontalSlider_VolumeV = new QSlider(centralwidget);
-        horizontalSlider_VolumeV->setObjectName("horizontalSlider_VolumeV");
-        horizontalSlider_VolumeV->setGeometry(QRect(30, 440, 221, 20));
-        horizontalSlider_VolumeV->setOrientation(Qt::Orientation::Horizontal);
-        treeView = new QTreeView(centralwidget);
-        treeView->setObjectName("treeView");
-        treeView->setGeometry(QRect(30, 30, 221, 281));
-        listView = new QListView(centralwidget);
-        listView->setObjectName("listView");
-        listView->setGeometry(QRect(30, 320, 221, 91));
+        splitter->addWidget(groupBox_Video);
+
+        verticalLayout_6->addWidget(splitter);
+
+        ORG1_2 = new QLabel(centralwidget);
+        ORG1_2->setObjectName("ORG1_2");
+
+        verticalLayout_6->addWidget(ORG1_2);
+
+
+        gridLayout->addLayout(verticalLayout_6, 0, 0, 1, 1);
+
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName("verticalLayout_3");
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setObjectName("verticalLayout_2");
         label_Title_File_Name = new QLabel(centralwidget);
         label_Title_File_Name->setObjectName("label_Title_File_Name");
-        label_Title_File_Name->setGeometry(QRect(290, 370, 201, 31));
-        QFont font1;
-        font1.setPointSize(12);
-        font1.setBold(true);
-        label_Title_File_Name->setFont(font1);
+        QFont font;
+        font.setPointSize(12);
+        font.setBold(true);
+        label_Title_File_Name->setFont(font);
+
+        verticalLayout_2->addWidget(label_Title_File_Name);
+
         label_Value_File_Name = new QLabel(centralwidget);
         label_Value_File_Name->setObjectName("label_Value_File_Name");
-        label_Value_File_Name->setGeometry(QRect(290, 400, 561, 31));
-        label_Value_File_Name->setFont(font1);
+        label_Value_File_Name->setFont(font);
+
+        verticalLayout_2->addWidget(label_Value_File_Name);
+
+
+        verticalLayout_3->addLayout(verticalLayout_2);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName("verticalLayout");
+        horizontalSlide_DurationV = new QSlider(centralwidget);
+        horizontalSlide_DurationV->setObjectName("horizontalSlide_DurationV");
+        horizontalSlide_DurationV->setOrientation(Qt::Orientation::Horizontal);
+
+        verticalLayout->addWidget(horizontalSlide_DurationV);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName("horizontalLayout_2");
+        label_Current_Time = new QLabel(centralwidget);
+        label_Current_Time->setObjectName("label_Current_Time");
+        QFont font1;
+        font1.setPointSize(11);
+        font1.setBold(true);
+        label_Current_Time->setFont(font1);
+
+        horizontalLayout_2->addWidget(label_Current_Time);
+
+        ORG1 = new QLabel(centralwidget);
+        ORG1->setObjectName("ORG1");
+
+        horizontalLayout_2->addWidget(ORG1);
+
+        label_Total_Time = new QLabel(centralwidget);
+        label_Total_Time->setObjectName("label_Total_Time");
+        label_Total_Time->setFont(font1);
+
+        horizontalLayout_2->addWidget(label_Total_Time);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+
+        verticalLayout_3->addLayout(verticalLayout);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName("horizontalLayout");
+        pushButton_VolumeV = new QPushButton(centralwidget);
+        pushButton_VolumeV->setObjectName("pushButton_VolumeV");
+
+        horizontalLayout->addWidget(pushButton_VolumeV);
+
+        pushButton_Seek_BackwardV = new QPushButton(centralwidget);
+        pushButton_Seek_BackwardV->setObjectName("pushButton_Seek_BackwardV");
+
+        horizontalLayout->addWidget(pushButton_Seek_BackwardV);
+
+        pushButton_Seek_ForwardV = new QPushButton(centralwidget);
+        pushButton_Seek_ForwardV->setObjectName("pushButton_Seek_ForwardV");
+
+        horizontalLayout->addWidget(pushButton_Seek_ForwardV);
+
+        pushButton_Play_PauseV = new QPushButton(centralwidget);
+        pushButton_Play_PauseV->setObjectName("pushButton_Play_PauseV");
+
+        horizontalLayout->addWidget(pushButton_Play_PauseV);
+
+        pushButton_StopV = new QPushButton(centralwidget);
+        pushButton_StopV->setObjectName("pushButton_StopV");
+
+        horizontalLayout->addWidget(pushButton_StopV);
+
+
+        verticalLayout_3->addLayout(horizontalLayout);
+
+
+        gridLayout->addLayout(verticalLayout_3, 1, 0, 1, 1);
+
+
+        formLayout->setLayout(0, QFormLayout::FieldRole, gridLayout);
+
+
+        gridLayout_2->addLayout(formLayout, 0, 0, 1, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 920, 25));
+        menubar->setGeometry(QRect(0, 0, 1161, 25));
         menuOpen = new QMenu(menubar);
         menuOpen->setObjectName("menuOpen");
         menuVideo = new QMenu(menubar);
@@ -150,15 +263,17 @@ public:
         actionOpen_File->setText(QCoreApplication::translate("MainWindow", "Abrir Archivo Audio", nullptr));
         actionOpen_File_Video->setText(QCoreApplication::translate("MainWindow", "Abrir Archivo Video", nullptr));
         groupBox_Video->setTitle(QString());
-        label_Current_Time->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
-        label_Total_Time->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
-        pushButton_Play_PauseV->setText(QString());
-        pushButton_Seek_BackwardV->setText(QString());
-        pushButton_StopV->setText(QString());
-        pushButton_Seek_ForwardV->setText(QString());
-        pushButton_VolumeV->setText(QString());
+        ORG1_2->setText(QString());
         label_Title_File_Name->setText(QCoreApplication::translate("MainWindow", "Audio File Name: ", nullptr));
         label_Value_File_Name->setText(QCoreApplication::translate("MainWindow", "FILE_NAME", nullptr));
+        label_Current_Time->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
+        ORG1->setText(QString());
+        label_Total_Time->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
+        pushButton_VolumeV->setText(QString());
+        pushButton_Seek_BackwardV->setText(QString());
+        pushButton_Seek_ForwardV->setText(QString());
+        pushButton_Play_PauseV->setText(QString());
+        pushButton_StopV->setText(QString());
         menuOpen->setTitle(QCoreApplication::translate("MainWindow", "Audio", nullptr));
         menuVideo->setTitle(QCoreApplication::translate("MainWindow", "Video", nullptr));
     } // retranslateUi
