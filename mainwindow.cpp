@@ -27,8 +27,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->treeView->setModel(directorio);
     ui->treeView->setRootIndex(directorio->index(QDir::rootPath())); // Muestra el root por defecto
 
-    // Conectar la señal de selección
+    // Inicializar el QListWidget
+    listWidget = ui->listWidget; // Asumiendo que tienes un QListWidget en tu UI
+    listWidget->clear();  // Limpiar el QListWidget al inicio
+    listWidget->setSelectionMode(QAbstractItemView::SingleSelection); // Permitir selección de un solo item
+
+    // Conectar la señal de selección de carpeta
     connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::on_treeView_clicked);
+
+    // Conectar la selección de archivos en el QListWidget
+    connect(listWidget, &QListWidget::itemClicked, this, &MainWindow::on_listWidget_itemClicked);
 
     // Configuración del reproductor de video
     Player = new QMediaPlayer(this);
@@ -196,10 +204,6 @@ void MainWindow::on_pushButton_Seek_ForwardV_clicked()
 }
 
 
-/////////////////////////////////////////////////////////////////////////////// NUEVO
-/////////////////////////////////////////////////////////////////////////////// NUEVO
-
-
 
 void MainWindow::createVideoWidget() {
     // Solo crear el widget si no existe uno ya
@@ -222,66 +226,109 @@ void MainWindow::createVideoWidget() {
     }
 }
 
-// Función para manejar el clic en el treeView
+//Funcion para manejar el click en las carpetas
 void MainWindow::on_treeView_clicked(const QModelIndex &index) {
-    // Verifica si el índice es válido
-    if (!index.isValid()) {
-        qDebug() << "Error: Índice no válido.";
-        return;  // No hacer nada si el índice no es válido
-    }
-
+    // Obtener la ruta completa del archivo o directorio
     QString filePath = directorio->filePath(index);
     QFileInfo fileInfo(filePath);
 
-    // Verifica que el archivo sea de un tipo específico (video o audio)
-    if (fileInfo.isFile() && (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp3")) {
+    // Verificar si se ha seleccionado un directorio
+    if (fileInfo.isDir()) {
+        // Si es un directorio, actualizar el QListWidget con los archivos contenidos en esa carpeta
+        listWidget->clear();  // Limpiar el QListWidget antes de agregar nuevos archivos
 
-        qDebug() << "Archivo seleccionado: " << filePath;
+        // Cargar los archivos de video y audio en el QListWidget
+        QDir dir(filePath);
+        QStringList audioFiles = dir.entryList(QStringList() << "*.mp3" << "*.wav" << "*.flac", QDir::Files);
+        QStringList videoFiles = dir.entryList(QStringList() << "*.mp4" << "*.avi" << "*.mkv", QDir::Files);
 
-        // Si ya hay un reproductor de video, detenerlo antes de cargar el nuevo archivo
-        if (Player) {
-            Player->stop();  // Detener el reproductor si ya está reproduciendo
-            qDebug() << "Reproductor detenido.";
+        // Añadir los archivos al QListWidget
+        listWidget->addItems(audioFiles);
+        listWidget->addItems(videoFiles);
+
+        // Si no hay archivos en la carpeta, mostrar un mensaje
+        if (audioFiles.isEmpty() && videoFiles.isEmpty()) {
+            QMessageBox::information(this, tr("Sin archivos"), tr("No hay archivos de audio o video en esta carpeta."));
         }
+    } else if (fileInfo.isFile()) {
+        // Si se selecciona un archivo, verificar si es válido
+        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
+            // Es un archivo de video
+            qDebug() << "Archivo de video seleccionado: " << filePath;
 
-
-
-        // Verifica si la URL es válida antes de configurar el reproductor
-        if (QFile::exists(filePath)) {
-            qDebug() << "Archivo encontrado. Cargando en el reproductor.";
+            // Detener cualquier reproducción anterior y cargar el nuevo archivo
+            Player->stop();
             Player->setSource(QUrl::fromLocalFile(filePath));
+            Player->play();
 
-            // Reiniciar la reproducción desde el inicio
-            Player->play();  // Iniciar la reproducción del archivo seleccionado
-            qDebug() << "Reproducción iniciada.";
-
-            // Cambiar el icono de reproducción a "pausa"
+            // Cambiar el icono del botón de reproducción a "Pausar"
             IS_Pause = false;
             ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
-            // Actualizar la etiqueta con el nombre del archivo
-            ui->label_Value_File_Name->setText(fileInfo.fileName());
 
-            // Asegurarse de que el video se muestra correctamente
+
+            // Asegurarse de que el VideoWidget esté visible
             if (Video) {
-                Video->setVisible(true);  // Mostrar el VideoWidget si es un archivo de video
+                Video->setVisible(true);
                 Video->show();
-                qDebug() << "VideoWidget visible.";
+            }
+        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
+            // Es un archivo de audio
+            qDebug() << "Archivo de audio seleccionado: " << filePath;
+
+            // Detener cualquier reproducción anterior y cargar el nuevo archivo
+            Player->stop();
+            Player->setSource(QUrl::fromLocalFile(filePath));
+            Player->play();
+
+            // Cambiar el icono del botón de reproducción a "Pausar"
+            IS_Pause = false;
+            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+
+            // No mostrar VideoWidget para archivos de audio
+            if (Video) {
+                Video->hide();
             }
 
-        } else {
-            qDebug() << "Error: El archivo no existe.";
-            QMessageBox::warning(this, tr("Error de archivo"), tr("El archivo seleccionado no se puede encontrar."));
-        }
 
-    } else {
-        // Si el archivo no es un archivo de video, mostrar mensaje y ocultar el video
-        if (Video) {
-            Video->hide();  // Esconder el VideoWidget si no es un archivo de video
+        } else {
+            // Si el archivo no es válido (ni video ni audio), mostrar un mensaje de advertencia
+            QMessageBox::warning(this, tr("Formato no soportado"), tr("Por favor selecciona un archivo de video o audio válido."));
         }
-        QMessageBox::warning(this, tr("Formato no soportado"), tr("Por favor selecciona un archivo de video o audio válido."));
+    } else {
+        // Si no es un archivo ni un directorio, mostrar un mensaje de error
+        QMessageBox::warning(this, tr("Error"), tr("Selecciona una carpeta o un archivo válido."));
     }
 }
 
 
+//funcion para manejar el click en la lista
+void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
+    QString fileName = item->text();
+    QString dirPath = directorio->filePath(ui->treeView->currentIndex()); // Obtener la ruta de la carpeta actual
+    QString filePath = QDir(dirPath).filePath(fileName);
+
+    QFileInfo fileInfo(filePath);
+
+    if (fileInfo.isFile()) {
+        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
+            // Es un archivo de video
+            Player->stop();
+            Player->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de video
+            Player->play();  // Iniciar la reproducción
+            // Actualizar el nombre del archivo en la interfaz
+            ui->label_Value_File_Name->setText(fileInfo.fileName());
+            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause)); // Cambiar icono
+        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
+            // Es un archivo de audio
+            Player->stop();
+            Player->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de audio
+            Player->play();  // Iniciar la reproducción
+            // Actualizar el nombre del archivo en la interfaz
+            ui->label_Value_File_Name->setText(fileInfo.fileName());
+        } else {
+            QMessageBox::warning(this, tr("Formato no soportado"), tr("Este archivo no es soportado por el reproductor."));
+        }
+    }
+}
 

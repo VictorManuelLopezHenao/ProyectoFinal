@@ -48,12 +48,15 @@ private slots:
 
     void on_treeView_clicked(const QModelIndex &index);
 
+    // Manejo de selección en el QListWidget (selección de archivo para reproducir)
+    void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
 
-    QTimer *updateTimer; // Declaración del QTimer
-    void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
+
     Ui::MainWindow *ui;
+
+    QTimer *updateTimer; // Declaración del QTimer
 
     // Reproductor de video
     QMediaPlayer *Player;           // Reproductor de video
@@ -68,10 +71,11 @@ private:
     QFileSystemModel *directorio;
     QFileSystemModel *archivo;
 
+    QListWidget *listWidget;       // Puntero al QListWidget para mostrar los archivos
 
 
-
-     void createVideoWidget(); //NUEVO
+     void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
+     void createVideoWidget();
 
 
 };
