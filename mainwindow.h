@@ -13,7 +13,6 @@
 #include <QTimer>
 #include <QListWidgetItem>
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -46,14 +45,12 @@ private slots:
     void on_pushButton_Seek_BackwardV_clicked();
     void on_pushButton_Seek_ForwardV_clicked();
 
-
     void on_treeView_clicked(const QModelIndex &index);
 
     // Manejo de selección en el QListWidget (selección de archivo para reproducir)
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
-
     Ui::MainWindow *ui;
 
     QTimer *updateTimer; // Declaración del QTimer
@@ -64,6 +61,10 @@ private:
     QAudioOutput *videoAudioOutput; // Salida de audio para el reproductor de video
     qint64 Mduration;               // Duración del video
 
+    // Reproductor de audio para MP3
+    QMediaPlayer *audioPlayer;      // Reproductor de audio
+    QAudioOutput *audioOutput;     // Salida de audio para el MP3
+
     // Estado del reproductor de video
     bool IS_Pause;                  // Indica si el video está pausado
     bool IS_Muted;                  // Indica si el video está silenciado
@@ -73,11 +74,8 @@ private:
 
     QListWidget *listWidget;       // Puntero al QListWidget para mostrar los archivos
 
-
-     void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
-     void createVideoWidget();
-
-
+    void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
+    void createVideoWidget();
 };
 
 #endif // MAINWINDOW_H

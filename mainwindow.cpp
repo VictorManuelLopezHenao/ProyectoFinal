@@ -10,18 +10,23 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent), ui(new Ui::MainWindow),
+    audioPlayer(nullptr), Player(nullptr), videoAudioOutput(nullptr)  // Inicialización de punteros
 {
-    ui->setupUi(this);
+    ui->setupUi(this);  // Setup de la UI
 
     // Inicialización del VideoWidget
     Video = new QVideoWidget(this);
     Video->setGeometry(5, 5, ui->groupBox_Video->width() - 10, ui->groupBox_Video->height() - 10);
     Video->setParent(ui->groupBox_Video);
 
+    audioPlayer = new QMediaPlayer(this);
+    videoAudioOutput = new QAudioOutput(this);  // Asegúrate de que el QAudioOutput esté configurado
+    audioPlayer->setAudioOutput(videoAudioOutput);  // Asocia audioPlayer con videoAudioOutput
 
+    audioPlayer = new QMediaPlayer(this);
+    audioPlayer->setAudioOutput(videoAudioOutput);  // Si deseas configurar una salida de audio para audioPlayer
     // Configuración del QFileSystemModel para el treeView
     directorio = new QFileSystemModel(this);
     directorio->setRootPath(QDir::rootPath());
@@ -146,21 +151,27 @@ void MainWindow::on_horizontalSlide_DurationV_valueChanged(int value)
 }
 
 // Botón para reproducir o pausar el video
-void MainWindow::on_pushButton_Play_PauseV_clicked()
-{
-    if (IS_Pause)
-    {
-        IS_Pause = false;
-        Player->play();
+void MainWindow::on_pushButton_Play_PauseV_clicked() {
+    if (IS_Pause) {
+        // Reanudar la reproducción tanto del video como del audio
+        Player->play();  // Reanudar video
+        audioPlayer->play();  // Reanudar audio
+
+        // Cambiar el icono del botón a "Pausar"
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-    }
-    else
-    {
-        IS_Pause = true;
-        Player->pause();
+    } else {
+        // Pausar tanto el video como el audio
+        Player->pause();  // Pausar video
+        audioPlayer->pause();  // Pausar audio
+
+        // Cambiar el icono del botón a "Reproducir"
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
+
+    // Cambiar el estado de pausa
+    IS_Pause = !IS_Pause;
 }
+
 
 // Botón para detener el video
 void MainWindow::on_pushButton_StopV_clicked()
@@ -313,32 +324,33 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
     if (fileInfo.isFile()) {
         if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
             // Es un archivo de video
-            Player->stop();
+            audioPlayer->stop();  // Detener el reproductor de audio si estaba reproduciendo algo
+            Player->stop();  // Detener el reproductor de video si estaba reproduciendo algo
             Player->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de video
-            Player->play();  // Iniciar la reproducción
-            // Actualizar el nombre del archivo en la interfaz
+            Player->play();  // Iniciar la reproducción del video
             ui->label_Value_File_Name->setText(fileInfo.fileName());
-            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause)); // Cambiar icono
+            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
             // Es un archivo de audio
-            Player->stop();
-            Player->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de audio
-            Player->play();  // Iniciar la reproducción
-            // Actualizar el nombre del archivo en la interfaz
-            ui->label_Value_File_Name->setText(fileInfo.fileName());
+            Player->stop();  // Detener el reproductor de video si estaba reproduciendo
+            audioPlayer->stop();  // Detener el reproductor de audio si estaba reproduciendo
+            audioPlayer->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de audio
+            audioPlayer->play();  // Iniciar la reproducción del audio
 
-            // Reproducir el video predefinido
-            Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4")); // Establecer el video de fondo
-            Player->play(); // Reproducir el video
+            // Reproducir el video predeterminado como fondo
+            Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4"));  // Establecer el video de fondo
+            Player->play();  // Reproducir el video de fondo
 
             // Asegurarse de que el VideoWidget esté visible
             if (Video) {
                 Video->setVisible(true);
                 Video->show();
             }
+
+            ui->label_Value_File_Name->setText(fileInfo.fileName());
+            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause)); // Cambiar icono a "Pausar"
         } else {
             QMessageBox::warning(this, tr("Formato no soportado"), tr("Este archivo no es soportado por el reproductor."));
         }
     }
 }
-
