@@ -78,6 +78,7 @@ private:
     void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
     void createVideoWidget();
 
+
 };
 
 #endif // MAINWINDOW_H
