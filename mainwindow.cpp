@@ -159,24 +159,26 @@ void MainWindow::on_horizontalSlide_DurationV_valueChanged(int value)
 // Botón para reproducir o pausar el video
 void MainWindow::on_pushButton_Play_PauseV_clicked() {
     if (IS_Pause) {
-        // Reanudar la reproducción tanto del video como del audio
-        Player->play();  // Reanudar video
-        audioPlayer->play();  // Reanudar audio
+        // Reanudar reproducción solo del reproductor activo (audio o video)
+        if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
+            audioPlayer->play();
+        } else {
+            Player->play();
+        }
 
-        // Cambiar el icono del botón a "Pausar"
+        // Cambiar icono a "Pausar"
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     } else {
-        // Pausar tanto el video como el audio
-        Player->pause();  // Pausar video
-        audioPlayer->pause();  // Pausar audio
+        // Pausar ambos reproductores
+        Player->pause();
+        audioPlayer->pause();
 
-        // Cambiar el icono del botón a "Reproducir"
+        // Cambiar icono a "Reproducir"
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
-
-    // Cambiar el estado de pausa
     IS_Pause = !IS_Pause;
 }
+
 
 
 // Botón para detener el video
@@ -207,32 +209,10 @@ void MainWindow::on_horizontalSlider_VolumeV_valueChanged(int value)
 
 // Botón para volver a la cancion anterior
 void MainWindow::on_pushButton_Seek_BackwardV_clicked() {
-    int currentIndex = listWidget->currentRow(); // Obtiene el índice del item seleccionado actual
-
-    // Si no es el primer item, mover al anterior
+    int currentIndex = listWidget->currentRow();
     if (currentIndex > 0) {
-        listWidget->setCurrentRow(currentIndex - 1); // Selecciona el archivo anterior
-        QString fileName = listWidget->currentItem()->text(); // Obtener el nombre del archivo seleccionado
-        QString dirPath = directorio->filePath(ui->treeView->currentIndex());
-        QString filePath = QDir(dirPath).filePath(fileName); // Obtener la ruta completa del archivo
-
-        QFileInfo fileInfo(filePath);
-
-        // Comprobar si es un archivo de video o audio
-        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
-            // Es un archivo de video
-            Player->stop();
-            Player->setSource(QUrl::fromLocalFile(filePath));
-            Player->play();
-        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
-            // Es un archivo de audio
-            audioPlayer->stop();
-            audioPlayer->setSource(QUrl::fromLocalFile(filePath));
-            audioPlayer->play();
-        }
-
-        // Actualizar la etiqueta con el nombre del archivo
-        ui->label_Value_File_Name->setText(fileInfo.fileName());
+        listWidget->setCurrentRow(currentIndex - 1);
+        on_listWidget_itemClicked(listWidget->currentItem()); // Reproducir archivo seleccionado
     }
 }
 
@@ -240,34 +220,13 @@ void MainWindow::on_pushButton_Seek_BackwardV_clicked() {
 
 // Botón para avanzar a la siguinete cancion
 void MainWindow::on_pushButton_Seek_ForwardV_clicked() {
-    int currentIndex = listWidget->currentRow(); // Obtiene el índice del item seleccionado actual
-
-    // Si no es el último item, mover al siguiente
+    int currentIndex = listWidget->currentRow();
     if (currentIndex < listWidget->count() - 1) {
-        listWidget->setCurrentRow(currentIndex + 1); // Selecciona el archivo siguiente
-        QString fileName = listWidget->currentItem()->text(); // Obtener el nombre del archivo seleccionado
-        QString dirPath = directorio->filePath(ui->treeView->currentIndex());
-        QString filePath = QDir(dirPath).filePath(fileName); // Obtener la ruta completa del archivo
-
-        QFileInfo fileInfo(filePath);
-
-        // Comprobar si es un archivo de video o audio
-        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
-            // Es un archivo de video
-            Player->stop();
-            Player->setSource(QUrl::fromLocalFile(filePath));
-            Player->play();
-        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
-            // Es un archivo de audio
-            audioPlayer->stop();
-            audioPlayer->setSource(QUrl::fromLocalFile(filePath));
-            audioPlayer->play();
-        }
-
-        // Actualizar la etiqueta con el nombre del archivo
-        ui->label_Value_File_Name->setText(fileInfo.fileName());
+        listWidget->setCurrentRow(currentIndex + 1);
+        on_listWidget_itemClicked(listWidget->currentItem()); // Reproducir archivo seleccionado
     }
 }
+
 
 
 
@@ -371,43 +330,33 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index) {
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
     QString fileName = item->text();
-    QString dirPath = directorio->filePath(ui->treeView->currentIndex()); // Obtener la ruta de la carpeta actual
+    QString dirPath = directorio->filePath(ui->treeView->currentIndex());
     QString filePath = QDir(dirPath).filePath(fileName);
-
     QFileInfo fileInfo(filePath);
 
-    if (fileInfo.isFile()) {
-        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
-            // Es un archivo de video
-            audioPlayer->stop();  // Detener el reproductor de audio si estaba reproduciendo algo
-            Player->stop();  // Detener el reproductor de video si estaba reproduciendo algo
-            Player->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de video
-            Player->play();  // Iniciar la reproducción del video
-            ui->label_Value_File_Name->setText(fileInfo.fileName());
-            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
-            // Es un archivo de audio
-            Player->stop();  // Detener el reproductor de video si estaba reproduciendo
-            audioPlayer->stop();  // Detener el reproductor de audio si estaba reproduciendo
-            audioPlayer->setSource(QUrl::fromLocalFile(filePath));  // Cargar el archivo de audio
-            audioPlayer->play();  // Iniciar la reproducción del audio
+    // Parar cualquier reproducción actual
+    Player->stop();
+    audioPlayer->stop();
 
-            // Reproducir el video predeterminado como fondo
-            Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4"));  // Establecer el video de fondo
-            Player->play();  // Reproducir el video de fondo
-
-            // Asegurarse de que el VideoWidget esté visible
-            if (Video) {
-                Video->setVisible(true);
-                Video->show();
-            }
-
-            ui->label_Value_File_Name->setText(fileInfo.fileName());
-            ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause)); // Cambiar icono a "Pausar"
-        } else {
-            QMessageBox::warning(this, tr("Formato no soportado"), tr("Este archivo no es soportado por el reproductor."));
-        }
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
+        // Reproducción de video
+        Player->setSource(QUrl::fromLocalFile(filePath));
+        Player->play();
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        IS_Pause = false;
+    } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
+        // Reproducción de audio y video de fondo
+        audioPlayer->setSource(QUrl::fromLocalFile(filePath));
+        audioPlayer->play();
+        Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4")); // Video predeterminado
+        Player->play();
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        IS_Pause = false;
+    } else {
+        QMessageBox::warning(this, tr("Formato no soportado"), tr("Este archivo no es soportado por el reproductor."));
     }
+
+    ui->label_Value_File_Name->setText(fileInfo.fileName());
 }
 
 
