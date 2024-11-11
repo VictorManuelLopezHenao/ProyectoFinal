@@ -88,7 +88,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(updateTimer, &QTimer::timeout, this, &MainWindow::updateSliderPosition);
     updateTimer->start();
 
-
 }
 
 MainWindow::~MainWindow()
@@ -206,21 +205,70 @@ void MainWindow::on_horizontalSlider_VolumeV_valueChanged(int value)
     videoAudioOutput->setVolume(value / 100.0);
 }
 
-// Botón para retroceder en el video
-void MainWindow::on_pushButton_Seek_BackwardV_clicked()
-{
-    int newValue = ui->horizontalSlide_DurationV->value() - 20;
-    ui->horizontalSlide_DurationV->setValue(qMax(0, newValue));
-    Player->setPosition(ui->horizontalSlide_DurationV->value() * 1000);
+// Botón para volver a la cancion anterior
+void MainWindow::on_pushButton_Seek_BackwardV_clicked() {
+    int currentIndex = listWidget->currentRow(); // Obtiene el índice del item seleccionado actual
+
+    // Si no es el primer item, mover al anterior
+    if (currentIndex > 0) {
+        listWidget->setCurrentRow(currentIndex - 1); // Selecciona el archivo anterior
+        QString fileName = listWidget->currentItem()->text(); // Obtener el nombre del archivo seleccionado
+        QString dirPath = directorio->filePath(ui->treeView->currentIndex());
+        QString filePath = QDir(dirPath).filePath(fileName); // Obtener la ruta completa del archivo
+
+        QFileInfo fileInfo(filePath);
+
+        // Comprobar si es un archivo de video o audio
+        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
+            // Es un archivo de video
+            Player->stop();
+            Player->setSource(QUrl::fromLocalFile(filePath));
+            Player->play();
+        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
+            // Es un archivo de audio
+            audioPlayer->stop();
+            audioPlayer->setSource(QUrl::fromLocalFile(filePath));
+            audioPlayer->play();
+        }
+
+        // Actualizar la etiqueta con el nombre del archivo
+        ui->label_Value_File_Name->setText(fileInfo.fileName());
+    }
 }
 
-// Botón para avanzar en el video
-void MainWindow::on_pushButton_Seek_ForwardV_clicked()
-{
-    int newValue = ui->horizontalSlide_DurationV->value() + 20;
-    ui->horizontalSlide_DurationV->setValue(newValue);
-    Player->setPosition(ui->horizontalSlide_DurationV->value() * 1000);
+
+
+// Botón para avanzar a la siguinete cancion
+void MainWindow::on_pushButton_Seek_ForwardV_clicked() {
+    int currentIndex = listWidget->currentRow(); // Obtiene el índice del item seleccionado actual
+
+    // Si no es el último item, mover al siguiente
+    if (currentIndex < listWidget->count() - 1) {
+        listWidget->setCurrentRow(currentIndex + 1); // Selecciona el archivo siguiente
+        QString fileName = listWidget->currentItem()->text(); // Obtener el nombre del archivo seleccionado
+        QString dirPath = directorio->filePath(ui->treeView->currentIndex());
+        QString filePath = QDir(dirPath).filePath(fileName); // Obtener la ruta completa del archivo
+
+        QFileInfo fileInfo(filePath);
+
+        // Comprobar si es un archivo de video o audio
+        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
+            // Es un archivo de video
+            Player->stop();
+            Player->setSource(QUrl::fromLocalFile(filePath));
+            Player->play();
+        } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
+            // Es un archivo de audio
+            audioPlayer->stop();
+            audioPlayer->setSource(QUrl::fromLocalFile(filePath));
+            audioPlayer->play();
+        }
+
+        // Actualizar la etiqueta con el nombre del archivo
+        ui->label_Value_File_Name->setText(fileInfo.fileName());
+    }
 }
+
 
 
 
@@ -361,3 +409,4 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
         }
     }
 }
+

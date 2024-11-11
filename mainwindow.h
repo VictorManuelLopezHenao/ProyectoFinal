@@ -50,6 +50,7 @@ private slots:
     // Manejo de selección en el QListWidget (selección de archivo para reproducir)
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -76,6 +77,7 @@ private:
 
     void updateDuration(qint64 duration);  // Función para la duración del archivo multimedia
     void createVideoWidget();
+
 };
 
 #endif // MAINWINDOW_H
