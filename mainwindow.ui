@@ -261,7 +261,7 @@ border: 1px solid black;
                 <item>
                  <widget class="QLabel" name="ORG1_19">
                   <property name="text">
-                   <string>                               </string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -289,7 +289,7 @@ border: 1px solid black;
                 <item>
                  <widget class="QLabel" name="ORG1_7">
                   <property name="text">
-                   <string>                                                 </string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -348,7 +348,7 @@ border: 1px solid black;
                 <item>
                  <widget class="QLabel" name="ORG1">
                   <property name="text">
-                   <string>                                                </string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -409,7 +409,8 @@ border: 1px solid black;
                 <item>
                  <widget class="QPushButton" name="pushButton_Fullscreen">
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(255, 255, 255);</string>
+                   <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(23, 23, 23);</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -433,7 +434,7 @@ border: 1px solid black;
                 <item>
                  <widget class="QLabel" name="ORG1_2">
                   <property name="text">
-                   <string>                                                        </string>
+                   <string/>
                   </property>
                  </widget>
                 </item>

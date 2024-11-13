@@ -257,14 +257,14 @@ void MainWindow::on_pushButton_Fullscreen_clicked()
             fullscreenOverlay = nullptr;
         }
 
-        ui->pushButton_Fullscreen->setText("[]");
+        ui->pushButton_Fullscreen->setText("[ ]");
     } else {
         // Ir a pantalla completa
         Video->setWindowFlags(Qt::Window);  // Convertir el widget de video en una ventana independiente
         Video->showFullScreen(); // Mostrar en pantalla completa
 
         isFullscreen = true;
-        ui->pushButton_Fullscreen->setText("[]");
+        ui->pushButton_Fullscreen->setText("[ ]");
 
         // Crear una ventana flotante (overlay) para el botón en pantalla completa
         fullscreenOverlay = new QWidget(Video);
@@ -274,7 +274,7 @@ void MainWindow::on_pushButton_Fullscreen_clicked()
         fullscreenOverlay->move(Video->frameGeometry().width() - fullscreenOverlay->width() - 10, 700);
 
         // Crear el botón en la ventana flotante
-        QPushButton *fullscreenButton = new QPushButton("[]", fullscreenOverlay);
+        QPushButton *fullscreenButton = new QPushButton("[ ]", fullscreenOverlay);
         fullscreenButton->resize(fullscreenOverlay->size());
 
         // Conectar el botón al mismo slot para alternar entre los modos
