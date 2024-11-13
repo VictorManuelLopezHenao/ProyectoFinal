@@ -271,7 +271,7 @@ void MainWindow::on_pushButton_Fullscreen_clicked()
         fullscreenOverlay->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
         fullscreenOverlay->setAttribute(Qt::WA_TranslucentBackground, true);
         fullscreenOverlay->resize(50, 50); // Tamaño del botón de overlay
-        fullscreenOverlay->move(Video->frameGeometry().width() - fullscreenOverlay->width() - 10, 880);
+        fullscreenOverlay->move(Video->frameGeometry().width() - fullscreenOverlay->width() - 10, 700);
 
         // Crear el botón en la ventana flotante
         QPushButton *fullscreenButton = new QPushButton("[]", fullscreenOverlay);
