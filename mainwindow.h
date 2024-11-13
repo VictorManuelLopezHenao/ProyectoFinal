@@ -51,6 +51,8 @@ private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
 
+    void on_pushButton_Fullscreen_clicked();
+
 private:
     Ui::MainWindow *ui;
 
