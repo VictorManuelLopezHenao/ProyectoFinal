@@ -187,13 +187,14 @@ void MainWindow::on_horizontalSlide_DurationV_valueChanged(int value)
 void MainWindow::on_pushButton_Play_PauseV_clicked() {
     if (IS_Pause) {
         // Reanudar reproducción solo del reproductor activo (audio o video)
-        if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
+        if (audioPlayer->playbackState() == QMediaPlayer::PausedState) {
             audioPlayer->play();
-        } else {
+        }
+        if (Player->playbackState() == QMediaPlayer::PausedState) {
             Player->play();
         }
 
-        // Cambiar icono a "Pausar"
+        // Cambiar el icono a "Pausar"
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     } else {
         // Pausar ambos reproductores
@@ -204,6 +205,7 @@ void MainWindow::on_pushButton_Play_PauseV_clicked() {
         ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     }
     IS_Pause = !IS_Pause;
+
 }
 
 
@@ -417,9 +419,13 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
     QString filePath = QDir(dirPath).filePath(fileName);
     QFileInfo fileInfo(filePath);
 
-    // Parar cualquier reproducción actual
-    Player->stop();
-    audioPlayer->stop();
+    // Parar cualquier reproducción actual (audio y video)
+    audioPlayer->stop();  // Detener el audio
+    Player->stop();  // Detener el video
+
+    // Limpiar las fuentes de los reproductores antes de asignar nuevas
+    audioPlayer->setSource(QUrl());
+    Player->setSource(QUrl());
 
     // Mostrar el nombre del archivo en la etiqueta label_FileName
     ui->label_Value_File_Name->setText(fileInfo.fileName());
@@ -429,31 +435,36 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item) {
         Player->setSource(QUrl::fromLocalFile(filePath));
         Player->play();
 
-        connect(Player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
-        connect(Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
-
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        // Cambiar el icono de "Pausar"
         IS_Pause = false;
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+
+        // Asegurarse de que el VideoWidget esté visible
+        if (Video) {
+            Video->setVisible(true);
+            Video->show();
+        }
+
     } else if (fileInfo.suffix() == "mp3" || fileInfo.suffix() == "wav" || fileInfo.suffix() == "flac") {
-        // Reproducción de audio con video de fondo
+        // Reproducción de audio
         audioPlayer->setSource(QUrl::fromLocalFile(filePath));
         audioPlayer->play();
 
-        // Cargar video de fondo predeterminado
-        Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4"));
-        Player->setLoops(QMediaPlayer::Infinite); // Establecer el video para que se reproduzca en bucle
-        Player->play(); // Reproducir el video
-        if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
-            audioPlayer->play(); // Asegurarse de que el audio también se reproduzca
-        }
+        // Mostrar el video de fondo mientras se reproduce el audio
+        Player->setSource(QUrl("qrc:/new/prefix1/VideoFondoMP3.mp4")); // Establecer el video de fondo
+        Player->play(); // Reproducir el video de fondo
 
-        connect(audioPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
-        connect(audioPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
-
-        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        // Cambiar el icono de "Pausar"
         IS_Pause = false;
+        ui->pushButton_Play_PauseV->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+
+        // Asegurarse de que el VideoWidget esté visible
+        if (Video) {
+            Video->setVisible(true);
+            Video->show();
+        }
     } else {
-        // Si el archivo no es válido, muestra un mensaje de advertencia
+        // Si el archivo no es válido (ni video ni audio), mostrar un mensaje de advertencia
         QMessageBox::warning(this, tr("Formato no soportado"), tr("Por favor selecciona un archivo de video o audio válido."));
     }
 }
