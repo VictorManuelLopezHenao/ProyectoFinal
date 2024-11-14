@@ -52,6 +52,7 @@ private slots:
 
 
     void on_pushButton_Fullscreen_clicked();
+    void onVideoStateChanged(QMediaPlayer::PlaybackState state);
 
 private:
     Ui::MainWindow *ui;
