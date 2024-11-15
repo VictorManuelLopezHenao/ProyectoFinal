@@ -219,13 +219,28 @@ void MainWindow::on_pushButton_VolumeV_clicked()
 {
     IS_Muted = !IS_Muted;
     ui->pushButton_VolumeV->setIcon(IS_Muted ? style()->standardIcon(QStyle::SP_MediaVolumeMuted) : style()->standardIcon(QStyle::SP_MediaVolume));
-    videoAudioOutput->setMuted(IS_Muted);
+
+    // Verifica si está reproduciendo un archivo de audio o video y mutea el audio correspondiente
+    if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
+        audioPlayer->audioOutput()->setMuted(IS_Muted);
+    } else if (Player->playbackState() == QMediaPlayer::PlayingState) {
+        videoAudioOutput->setMuted(IS_Muted);
+    }
 }
+
 
 // Control del volumen del video
 void MainWindow::on_horizontalSlider_VolumeV_valueChanged(int value)
 {
-    videoAudioOutput->setVolume(value / 100.0);
+    // Normaliza el valor del slider de 0-100 a 0.0-1.0
+    qreal volume = value / 100.0;
+
+    // Verifica si está reproduciendo un archivo de audio o video y ajusta el volumen correspondiente
+    if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
+        audioPlayer->audioOutput()->setVolume(volume);
+    } else if (Player->playbackState() == QMediaPlayer::PlayingState) {
+        videoAudioOutput->setVolume(volume);
+    }
 }
 
 // Botón para volver a la cancion anterior
