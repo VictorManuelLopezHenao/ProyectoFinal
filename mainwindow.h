@@ -33,8 +33,6 @@ private slots:
     void durationChanged(qint64 duration);
     void positionChanged(qint64 position);
 
-    // Acciones relacionadas con archivos de video
-    void on_actionOpen_File_Video_triggered();
     void on_horizontalSlide_DurationV_valueChanged(int value);
 
     // Controles del reproductor de video

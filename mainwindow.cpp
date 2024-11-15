@@ -99,13 +99,6 @@ MainWindow::~MainWindow()
 }
 
 
-//Mostrar el video en pantalla
-void MainWindow::on_actionOpen_File_Video_triggered()
-{
-    // No hacer nada aquí. La inicialización del video se manejará desde el treeView.
-    QMessageBox::information(this, tr("Información"), tr("Por favor selecciona un archivo de video desde el árbol de archivos."));
-}
-
 void MainWindow::onVideoStateChanged(QMediaPlayer::PlaybackState state) {
     if (state == QMediaPlayer::StoppedState) {
         // Si el video se detuvo, reiniciarlo para que esté listo para la próxima reproducción
