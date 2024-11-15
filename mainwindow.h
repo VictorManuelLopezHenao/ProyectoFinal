@@ -28,6 +28,7 @@ public:
     ~MainWindow();
 
 private slots:
+
     void updateSliderPosition(); // Declaración de la función
     // Barra y tiempo de duración del archivo multimedia
     void durationChanged(qint64 duration);

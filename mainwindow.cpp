@@ -76,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Barra y tiempo de duración de los archivos
     connect(Player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
     connect(Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
+    connect(audioPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
+    connect(audioPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
 
 
     // En el constructor
@@ -148,7 +150,12 @@ void MainWindow::updateDuration(qint64 duration)
 
 // Función para manejar el cambio de duración
 void MainWindow::durationChanged(qint64 duration) {
-    Mduration = duration / 1000;
+    if (audioPlayer->playbackState() == QMediaPlayer::PlayingState) {
+        Mduration = audioPlayer->duration() / 1000;  // Duración en segundos
+    } else if (Player->playbackState() == QMediaPlayer::PlayingState) {
+        Mduration = Player->duration() / 1000;
+    }
+
     ui->horizontalSlide_DurationV->setMaximum(Mduration);
 
     QTime TotalTime((Mduration / 3600) % 60, (Mduration / 60) % 60, Mduration % 60);
@@ -158,6 +165,7 @@ void MainWindow::durationChanged(qint64 duration) {
     }
     ui->label_Total_Time->setText(TotalTime.toString(format));
 }
+
 
 
 
@@ -174,6 +182,7 @@ void MainWindow::positionChanged(qint64)
 void MainWindow::on_horizontalSlide_DurationV_valueChanged(int value)
 {
     Player->setPosition(value * 1000);
+    audioPlayer->setPosition(value * 1000);
 }
 
 // Botón para reproducir o pausar el video
